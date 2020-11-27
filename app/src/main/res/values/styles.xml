@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="roundCorner">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="textInputLayout">
+        <item name="android:textColorHint">#808080</item>
+        <item name="colorControlNormal">#222222</item>
+        <item name="colorControlActivated">@color/blue</item>
+        <item name="colorControlHighlight">@color/blue</item>
+        <item name="android:colorError">@android:color/holo_red_dark</item>
+    </style>
+
+</resources>

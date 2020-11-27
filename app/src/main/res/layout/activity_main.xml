@@ -12,27 +12,14 @@
         android:layout_height="100dp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="@string/login"
+        android:text="@string/main_button"
+        android:theme="@style/Theme.MaterialComponents.Light"
         app:backgroundTint="@color/blue"
         app:cornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@android:color/darker_gray"
-        app:strokeWidth="3dp" />
-
-    <!--就是下面这个button不行-->
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/blue"
-        android:backgroundTint="@null"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintVertical_bias="0.45" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

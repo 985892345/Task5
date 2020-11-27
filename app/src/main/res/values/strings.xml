@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Task5</string>
-    <string name="login">点击登陆</string>
+    <string name="main_button">点击登陆</string>
+    <string name="hint_login_username">请输入用户名</string>
+    <string name="hint_input_password">请输入密码</string>
+    <string name="digits_password">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_!?/;:</string>
+    <string name="login_forgetPassword">忘记密码</string>
+    <string name="login_signIn">立即注册</string>
+    <string name="login">登陆</string>
+    <string name="login_otherAccount">试试其他账号登陆</string>
 </resources>
