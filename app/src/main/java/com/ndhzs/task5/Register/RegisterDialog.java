@@ -1,10 +1,12 @@
-package com.ndhzs.task5.register;
+package com.ndhzs.task5.Register;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -13,16 +15,25 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.ndhzs.task5.LoginActivity;
+import com.ndhzs.task5.Net.SendNetRequest;
 import com.ndhzs.task5.R;
 import com.ndhzs.task5.TextWatcher.BaseTextWatcher;
 import com.ndhzs.task5.TextWatcher.Password1Watcher;
 import com.ndhzs.task5.TextWatcher.Password2Watcher;
 
-public class MyDialog extends Dialog {
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Objects;
 
+public class RegisterDialog extends Dialog {
+
+    private static final String TAG = "123";
+    private static final int SUCCEED = 0;
+    private static final int FAIL = -1;
     private TextInputLayout tilUsername;
     private TextInputLayout tilPassword1;
     private TextInputLayout tilPassword2;
@@ -33,16 +44,16 @@ public class MyDialog extends Dialog {
     private TextInputEditText etPhone;
     private CheckBox cbAgreement;
     private Button btnRegister;
+    private MHandler mHandler;
 
+    private final RegisterDialogListener registerDialogListener;
 
-    private final MyDialogListener myDialogListener;
+    private final Context context;
 
-    private final LoginActivity context;
-
-    public MyDialog(LoginActivity context, MyDialogListener myDialogListener) {
+    public RegisterDialog(Context context, RegisterDialogListener registerDialogListener) {
         super(context);
         this.context = context;
-        this.myDialogListener = myDialogListener;
+        this.registerDialogListener = registerDialogListener;
     }
 
     @Override
@@ -94,26 +105,67 @@ public class MyDialog extends Dialog {
         btnRegister.setOnClickListener(new MyOnClickListener());
     }
 
-    public interface MyDialogListener {
-        void ClosedClickListener(String username, String password);
-    }
-
     private class MyOnClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            String username = etUsername.getText().toString();
-            String password2 = etPassword2.getText().toString();
-            String phoneNum = etPhone.getText().toString();
-            if (!(username.equals("") && username == null && password2.equals("") && password2 == null && phoneNum.equals("") && phoneNum == null)){
-                SharedPreferences.Editor editor = context.getSharedPreferences("data", Context.MODE_PRIVATE).edit();
-                editor.putString("username", username);
-                editor.putString("password", password2);
-                editor.putString("phoneNum", phoneNum);
-                editor.apply();
-                myDialogListener.ClosedClickListener(etUsername.getText().toString(), etPassword1.getText().toString());
-            }else {
-                Toast.makeText(context, "请完善用户名和密码！", Toast.LENGTH_LONG).show();
+            boolean isOk = true;
+            String username = Objects.requireNonNull(etUsername.getText()).toString();
+            String password2 = Objects.requireNonNull(etPassword2.getText()).toString();
+            String phoneNum = Objects.requireNonNull(etPhone.getText()).toString();
+            if (username.equals("")){
+                isOk = false;
+                tilUsername.setError("用户名不能为空！");
+            }
+            if (password2.equals("")){
+                isOk = false;
+                tilPassword1.setError("密码不能为空！");
+            }
+            if (phoneNum.length() != 11){
+                isOk = false;
+                tilPhone.setError("号码尾数不为11位！");
+            }
+            if (isOk) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("username", username);
+                map.put("password", password2);
+                map.put("repassword", password2);
+                mHandler = new MHandler(RegisterDialog.this);
+                new SendNetRequest(mHandler).sendPostNetRequest("https://www.wanandroid.com/user/register", map);
+            }
+        }
+    }
+
+    private static class MHandler extends Handler {
+
+        private final WeakReference<RegisterDialog> weakReference;
+
+        public MHandler(RegisterDialog dialog) {
+            this.weakReference = new WeakReference<>(dialog);
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            RegisterDialog dialog= weakReference.get();
+
+            String[] data = (String[]) msg.obj;
+
+            if (dialog != null){
+                switch (msg.what) {
+                    case SUCCEED : {
+                        Toast.makeText(dialog.context, "注册成功！", Toast.LENGTH_SHORT).show();
+                        String username = data[0];
+                        String password = data[1];
+                        dialog.registerDialogListener.ClosedClickListener(username, password);
+                        break;
+                    }
+                    case FAIL : {
+                        Toast.makeText(dialog.context, "注册失败！", Toast.LENGTH_LONG).show();
+                        dialog.tilUsername.setError(data[2]);
+                        break;
+                    }
+                }
             }
         }
     }

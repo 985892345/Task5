@@ -19,7 +19,6 @@ public class Password1Watcher extends BaseTextWatcher{
         super.afterTextChanged(s);
 
         String text = s.toString();
-        Log.d("123", text.matches(".*[a-zA-Z]+.*")+"");
         if (s.length() > 5 && !text.matches(".*[a-zA-Z]+.*")) {
             mLayout.setError(null);//每次都会设置一个新的报错，必须把前一个报错给删掉
             mLayout.setError("密码必须包含字母！");

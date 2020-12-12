@@ -11,7 +11,6 @@ import com.google.android.material.textfield.TextInputLayout;
 public class BaseTextWatcher implements TextWatcher {
 
     private final TextInputLayout mLayout;
-    private final String TAG = "123";
 
     public BaseTextWatcher(TextInputLayout mLayout) {
         this.mLayout = mLayout;

@@ -21,8 +21,8 @@
     <string name="register">注册</string>
     <string name="agreement">同意用户协议</string>
 
-    
-<!--    left menu侧滑界面-->
+
+    <!--    left menu侧滑界面-->
     <string name="left_menu1">关于作者</string>
     <string name="left_menu2">资源分享</string>
     <string name="left_menu3">捐赠</string>
