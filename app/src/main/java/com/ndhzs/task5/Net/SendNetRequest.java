@@ -55,24 +55,20 @@ public class SendNetRequest {
         new Thread(
                 ()->{
                     try {
-                        StringBuilder dataToWrite = new StringBuilder(mUrl);//构建参数值
-                        dataToWrite.append("?");
-                        for (String key : params.keySet()) {
-                            dataToWrite.append(key).append("=").append(params.get(key)).append("&");
-                        }
-                        dataToWrite.deleteCharAt(dataToWrite.length() - 1);//删掉最后一个&
-                        String theUrl = dataToWrite.toString();
-
-                        URL url = new URL(theUrl);
+                        URL url = new URL(mUrl);
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                         connection.setRequestMethod("POST");//设置请求方式为POST
                         connection.setConnectTimeout(8000);//设置最大连接时间，单位为毫秒，超出这个设定的时间将会导致连接超时
                         connection.setReadTimeout(8000);//设置最大的读取时间，单位为毫秒，超出这个设定的时间将会导致读取超时
                         connection.setDoOutput(true);//允许输入流
                         connection.setDoInput(true);//允许输出流
-
+                        StringBuilder dataToWrite = new StringBuilder();//构建参数值
+                        for (String key : params.keySet()) {
+                            dataToWrite.append(key).append("=").append(params.get(key)).append("&");
+                        }
                         connection.connect();//正式连接
                         OutputStream outputStream = connection.getOutputStream();//开启输出流
+                        outputStream.write(dataToWrite.substring(0, dataToWrite.length() - 1).getBytes());//去除最后一个&
                         InputStream in = connection.getInputStream();//从接口处获取输入流
                         String responseData = StreamToString(in);//这里就是服务器返回的数据
 

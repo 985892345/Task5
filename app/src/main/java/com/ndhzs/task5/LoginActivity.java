@@ -28,9 +28,7 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     private Button btnForgetPassword;
-
     private Button btnRegister;
     private Button btnLogin;
     private Button btnQQ;
